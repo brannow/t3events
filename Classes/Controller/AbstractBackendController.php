@@ -2,37 +2,34 @@
 
 namespace DWenzel\T3events\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
 
 /**
  * Class AbstractBackendController
  *
  * @package DWenzel\T3events\Controller
  */
-class AbstractBackendController extends ActionController
+abstract class AbstractBackendController extends ActionController
 {
     /**
-     * Load and persist module data
-     *
-     * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
-     * @param \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @param RequestInterface $request
+     * @return ResponseInterface
      */
-    public function processRequest(RequestInterface $request, ResponseInterface $response)
+    public function processRequest(RequestInterface $request): ResponseInterface
     {
-        $this->moduleData = $this->moduleDataStorageService->loadModuleData($this->getModuleKey());
+        /*$this->moduleData = $this->moduleDataStorageService->loadModuleData(...);
 
         try {
-            parent::processRequest($request, $response);
+            $response = parent::processRequest($request);
             $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
         } catch (StopActionException $e) {
             $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
             throw $e;
         }
+
+        return $response;*/
+        return parent::processRequest($request);
     }
 }
