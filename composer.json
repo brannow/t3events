@@ -21,14 +21,11 @@
   ],
   "require": {
     "php": "^7.2",
-    "typo3/cms-core": ">=9.5.0 || ^10.4",
-    "typo3/cms-fluid": "^9.5 || ^10.4",
+    "typo3/cms-core": ">=9.5.0 || ^11.5",
+    "typo3/cms-fluid": "^9.5 || ^11.5",
     "dwenzel/t3extension-tools": "^2.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "^4.0 || ^5.1",
-    "phpunit/phpunit": " ^7.0",
-    "codeclimate/php-test-reporter": "dev-master",
     "dwenzel/t3extension-tools": "dev-feature/v11 as 2.0"
   },
   "autoload": {
