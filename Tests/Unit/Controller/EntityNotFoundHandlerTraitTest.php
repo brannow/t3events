@@ -5,11 +5,11 @@ namespace DWenzel\T3events\Tests\Controller;
 use DWenzel\T3events\Controller\EntityNotFoundHandlerTrait;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
@@ -22,12 +22,12 @@ class DummyParent extends ActionController
 {
     /**
      * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
-     * @param \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response
+     * @param ResponseInterface $response
      * @return void
      * @throws \Exception
      * @override \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
-    public function processRequest(RequestInterface $request, ResponseInterface $response)
+    public function processRequest(RequestInterface $request): ResponseInterface
     {
         throw new TargetNotFoundException('foo', 1464634137);
     }

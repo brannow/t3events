@@ -6,8 +6,8 @@ use DWenzel\T3events\Controller\ModuleDataTrait;
 use DWenzel\T3events\Controller\PerformanceController;
 use DWenzel\T3events\Controller\SettingsUtilityTrait;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException;
 use TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException;
 
@@ -19,19 +19,17 @@ class ScheduleController extends PerformanceController
     use ModuleDataTrait, FormTrait, SettingsUtilityTrait;
 
     /**
-     * Load and persist module data
-     *
      * @param RequestInterface $request
-     * @param ResponseInterface $response
-     * @return void
+     * @return ResponseInterface
      * @throws \Exception
      */
-    public function processRequest(RequestInterface $request, ResponseInterface $response)
+    public function processRequest(RequestInterface $request): ResponseInterface
     {
         $this->moduleData = $this->moduleDataStorageService->loadModuleData($this->getModuleKey());
 
-        parent::processRequest($request, $response);
+        $response = parent::processRequest($request);
         $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
+        return $response;
     }
 
     /**

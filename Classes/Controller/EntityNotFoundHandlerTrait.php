@@ -6,9 +6,8 @@ use DWenzel\T3events\Utility\SettingsInterface as SI;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Property\Exception as PropertyException;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class EntityNotFoundHandlerTrait
@@ -67,15 +66,14 @@ trait EntityNotFoundHandlerTrait
 
     /**
      * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
-     * @param \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response
      * @return void
      * @throws \Exception
      * @override \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
-    public function processRequest(RequestInterface $request, ResponseInterface $response)
+    public function processRequest(RequestInterface $request): ResponseInterface
     {
         try {
-            parent::processRequest($request, $response);
+            return parent::processRequest($request);
         } catch (\Exception $exception) {
             if (
                 (($exception instanceof PropertyException\TargetNotFoundException)
@@ -129,9 +127,6 @@ trait EntityNotFoundHandlerTrait
                     $this->redirectToUri($url);
                 }
                 break;
-            case 'pageNotFoundHandler':
-                $this->getFrontendController()->pageNotFoundAndExit($this->entityNotFoundMessage);
-                break;
             default:
                 $params = [
                     SI::CONFIG => $configuration,
@@ -178,14 +173,6 @@ trait EntityNotFoundHandlerTrait
     protected function isSSLEnabled()
     {
         return GeneralUtility::getIndpEnv('TYPO3_SSL');
-    }
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected function getFrontendController()
-    {
-        return $GLOBALS['TSFE'];
     }
 
     /**
