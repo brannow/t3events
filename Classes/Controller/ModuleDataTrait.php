@@ -1,13 +1,11 @@
 <?php
 namespace DWenzel\T3events\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use DWenzel\T3events\Domain\Model\Dto\ModuleData;
 use DWenzel\T3events\Service\ModuleDataStorageService;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
 
 /**
  * Class ModuleDataTrait
@@ -75,6 +73,21 @@ trait ModuleDataTrait
         $this->moduleDataStorageService = $service;
     }
 
+    public function processRequest(RequestInterface $request): ResponseInterface
+    {
+        $this->moduleData = $this->moduleDataStorageService->loadModuleData($this->getModuleKey());
+
+        try {
+            $response = parent::processRequest($request);
+            $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
+        } catch (\Exception $e) {
+            $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
+            throw $e;
+        }
+
+        return $response;
+    }
+
     /**
      * initializes all action methods
      */
@@ -90,7 +103,7 @@ trait ModuleDataTrait
      */
     public function resetAction()
     {
-        $this->moduleData = $this->objectManager->get(ModuleData::class);
+        $this->moduleData =GeneralUtility::makeInstance(ModuleData::class);
         $this->moduleDataStorageService->persistModuleData($this->moduleData, $this->getModuleKey());
         $this->forward('list');
     }
