@@ -53,14 +53,7 @@ return [
             'exclude' => 1,
             'label' => $cll . 'LGL.language',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'sys_language',
-                'foreign_table_where' => 'ORDER BY sys_language.title',
-                'items' => [
-                    [$cll . 'LGL.allLanguages', -1],
-                    [$cll . 'LGL.default_value', 0]
-                ],
+                'type' => 'language'
             ],
         ],
         'l10n_parent' => [
