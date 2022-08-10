@@ -52,7 +52,7 @@ class FilterCollection implements Iterator, Countable
     /**
      * Moves to the next storage entry.
      */
-    public function next()
+    public function next(): void
     {
         next($this->storage);
     }
@@ -64,7 +64,7 @@ class FilterCollection implements Iterator, Countable
      *
      * @return int
      */
-    public function key()
+    public function key(): int
     {
         return key($this->storage);
     }
@@ -73,7 +73,7 @@ class FilterCollection implements Iterator, Countable
      * Checks if the pointer of the storage points to a valid position
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return current($this->storage) !== false;
     }
@@ -81,7 +81,7 @@ class FilterCollection implements Iterator, Countable
     /**
      * Rewinds to the first storage element
      */
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->storage);
     }

@@ -23,7 +23,7 @@ class VectorImage extends \DOMDocument
     /**
      * @var \DOMXPath
      */
-    protected $xPath;
+    protected ?\DOMXPath $xPath;
 
     /**
      * Replaces text node children of a node
@@ -31,7 +31,7 @@ class VectorImage extends \DOMDocument
      * @param string $nodeId
      * @param string $content
      */
-    public function replaceNodeText($nodeId, $content)
+    public function replaceNodeText(string $nodeId, string $content): void
     {
         $element = $this->getElementById($nodeId);
         if ($element === null) {
@@ -53,7 +53,7 @@ class VectorImage extends \DOMDocument
      * @param string $attributeName Name of attribute to set
      * @param string $attributeValue Value to set
      */
-    protected function setElementsAttribute(array $elementIds, $attributeName, $attributeValue)
+    protected function setElementsAttribute(array $elementIds, $attributeName, $attributeValue): void
     {
         foreach ($elementIds as $elementId) {
             $element = $this->getElementById($elementId);
@@ -69,7 +69,7 @@ class VectorImage extends \DOMDocument
      *
      * @param array $elementIds
      */
-    public function hideElements(array $elementIds)
+    public function hideElements(array $elementIds): void
     {
         $this->setElementsAttribute($elementIds, 'style', 'display:none');
     }
@@ -79,7 +79,7 @@ class VectorImage extends \DOMDocument
      *
      * @param array $elementIds
      */
-    public function showElements(array $elementIds)
+    public function showElements(array $elementIds): void
     {
         $this->setElementsAttribute($elementIds, 'style', 'display:inline');
     }
@@ -91,17 +91,21 @@ class VectorImage extends \DOMDocument
      * which is quite slow
      *
      * @param string $elementId
-     * @return \DOMNode | null
+     * @return ?\DOMElement
      */
-    public function getElementById($elementId)
+    public function getElementById($elementId): ?\DOMElement
     {
-        return $this->getXPath()->query("//*[@id='" . $elementId . "']")->item(0);
+        $element = $this->getXPath()->query("//*[@id='" . $elementId . "']")->item(0);
+        if ($element instanceof \DOMElement) {
+            return $element;
+        }
+        return null;
     }
 
     /**
      * @return \DOMXPath
      */
-    public function getXPath()
+    public function getXPath(): \DOMXPath
     {
         if (!$this->xPath instanceof \DOMXPath) {
             $this->xPath = new \DOMXPath($this);
