@@ -21,6 +21,10 @@ trait PeriodAwareDemandFactoryTrait
     public function setPeriodConstraints(PeriodAwareDemandInterface $demand, $settings)
     {
         $timeZone = new \DateTimeZone(date_default_timezone_get());
+        if (!isset($settings['period'])) {
+            $settings['period'] = '';
+        }
+
 
         if ($settings['period'] === SI::FUTURE_ONLY
             || $settings['period'] === SI::PAST_ONLY
