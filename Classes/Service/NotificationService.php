@@ -27,13 +27,13 @@ class NotificationService
      * @param string $sender
      * @param string $subject
      * @param string $templateName
-     * @param null|string $format
      * @param $folderName
+     * @param null|string $format
      * @param array $variables
      * @param array $attachments
      * @return bool
      */
-    public function notify($recipient, $sender, $subject, $templateName, $format = null, $folderName, $variables = [], $attachments = null)
+    public function notify($recipient, $sender, $subject, $templateName, $folderName, $format = null, $variables = [], $attachments = null)
     {
         $templateView = $this->buildTemplateView($templateName, $format, $folderName);
         $templateView->assignMultiple($variables);

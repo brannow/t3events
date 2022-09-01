@@ -117,7 +117,6 @@ class NotificationServiceTest extends UnitTestCase
             'bar@baz.foo',
             'foo',
             'bar',
-            null,
             'baz'
         );
     }
