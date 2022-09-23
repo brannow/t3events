@@ -182,8 +182,12 @@ class PerformanceController
      */
     public function listAction(array $overwriteDemand = null)
     {
-        if (!$overwriteDemand){
-            $overwriteDemand = unserialize($this->session->get('tx_t3events_overwriteDemand'), ['allowed_classes' => false]);
+        if ($overwriteDemand === null){
+            $overwriteDemand = [];
+            $sessionData = $this->session->get('tx_t3events_overwriteDemand');
+            if (is_string($sessionData)) {
+                $overwriteDemand = unserialize($sessionData, ['allowed_classes' => false]);
+            }
         }
 
         $demand = $this->performanceDemandFactory->createFromSettings($this->settings);
