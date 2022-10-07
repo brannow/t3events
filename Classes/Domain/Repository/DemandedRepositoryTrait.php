@@ -13,8 +13,11 @@ namespace DWenzel\T3events\Domain\Repository;
 
 use DWenzel\T3events\Domain\Model\Dto\DemandInterface;
 use DWenzel\T3events\Domain\Model\Dto\SearchAwareDemandInterface;
+use DWenzel\T3events\Events\QueryGeneratePreMatchEvent;
 use DWenzel\T3events\UnsupportedMethodException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
@@ -107,11 +110,12 @@ trait DemandedRepositoryTrait
 
 
     /**
-     * @param DemandInterface $demand
+     * @param DemandInterface|null $demand
      * @param bool $respectEnableFields
      * @return QueryInterface
+     * @throws InvalidQueryException
      */
-    public function generateQuery(?DemandInterface $demand = null, $respectEnableFields = true)
+    public function generateQuery(?DemandInterface $demand = null, bool $respectEnableFields = true): QueryInterface
     {
         $query = $this->createQuery();
         $constraints = $this->createConstraintsFromDemand($query, $demand);
@@ -119,18 +123,18 @@ trait DemandedRepositoryTrait
         if ($respectEnableFields === false) {
             $query->getQuerySettings()->setIgnoreEnableFields(true);
         }
-        // Call hook functions for additional constraints
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['t3events']['Domain/Repository/AbstractDemandedRepository.php']['findDemanded'])) {
-            $params = [
-                'demand' => &$demand,
-                'respectEnableFields' => &$respectEnableFields,
-                'query' => &$query,
-                'constraints' => &$constraints,
-            ];
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXT']['t3events']['Domain/Repository/AbstractDemandedRepository.php']['findDemanded'] as $reference) {
-                GeneralUtility::callUserFunction($reference, $params, $this);
-            }
-        }
+
+        /** @var QueryGeneratePreMatchEvent $event */
+        $event = GeneralUtility::makeInstance(EventDispatcherInterface::class)->dispatch(new QueryGeneratePreMatchEvent(
+            $query,
+            $demand,
+            $constraints,
+            $respectEnableFields,
+            $this
+        ));
+        $query = $event->getQuery();
+        $constraints = $event->getConstrains();
+        $demand = $event->getDemand();
 
         if (!empty($constraints)) {
             $query->matching(
@@ -196,7 +200,7 @@ trait DemandedRepositoryTrait
      * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
      * @param \DWenzel\T3events\Domain\Model\Dto\SearchAwareDemandInterface $demand
      * @return array<\TYPO3\CMS\Extbase\Persistence\QOM\Constraint>
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     * @throws InvalidQueryException
      */
     public function createSearchConstraints(QueryInterface $query, SearchAwareDemandInterface $demand)
     {
