@@ -21,6 +21,7 @@ use DWenzel\T3events\Domain\Repository\EventTypeRepository;
 use DWenzel\T3events\Domain\Repository\GenreRepository;
 use DWenzel\T3events\Domain\Repository\PerformanceRepository;
 use DWenzel\T3events\Domain\Repository\VenueRepository;
+use DWenzel\T3events\Events\PerformanceListActionEvent;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
 
@@ -79,77 +80,16 @@ class PerformanceController
      */
     protected $contentObject;
 
-    protected $buttonConfiguration = [];
-
     /**
      * Constructor
      */
-    public function __construct()
-    {
-        $this->namespace = get_class($this);
-    }
-
-    /**
-     * Returns a configuration array for buttons
-     * in the form
-     * [
-     *   [
-     *      ButtonDemand::TABLE_KEY => 'tx_t3events_domain_model_event',
-     *      ButtonDemand::LABEL_KEY => 'button.listAction',
-     *      ButtonDemand::ACTION_KEY => 'list',
-     *      ButtonDemand::ICON_KEY => 'ext-t3events-type-default'
-     *   ]
-     * ]
-     * Each entry in the array describes one button
-     * @return array
-     */
-    public function getButtonConfiguration()
-    {
-        return $this->buttonConfiguration;
-    }
-
-    /**
-     * injectPerformanceRepository
-     *
-     * @param \DWenzel\T3events\Domain\Repository\PerformanceRepository $performanceRepository
-     * @return void
-     */
-    public function injectPerformanceRepository(PerformanceRepository $performanceRepository)
+    public function __construct(PerformanceRepository $performanceRepository, GenreRepository $genreRepository, VenueRepository $venueRepository, EventTypeRepository $eventTypeRepository)
     {
         $this->performanceRepository = $performanceRepository;
-    }
-
-    /**
-     * injectGenreRepository
-     *
-     * @param \DWenzel\T3events\Domain\Repository\GenreRepository $genreRepository
-     * @return void
-     */
-    public function injectGenreRepository(GenreRepository $genreRepository)
-    {
         $this->genreRepository = $genreRepository;
-    }
-
-    /**
-     * injectVenueRepository
-     *
-     * @param \DWenzel\T3events\Domain\Repository\VenueRepository $venueRepository
-     * @return void
-     */
-    public function injectVenueRepository(VenueRepository $venueRepository)
-    {
         $this->venueRepository = $venueRepository;
-    }
-
-    /**
-     * injectEventTypeRepository
-     *
-     * @param \DWenzel\T3events\Domain\Repository\EventTypeRepository $eventTypeRepository
-     * @return void
-     */
-    public function injectEventTypeRepository(EventTypeRepository $eventTypeRepository)
-    {
         $this->eventTypeRepository = $eventTypeRepository;
+        $this->namespace = get_class($this);
     }
 
     /**
@@ -175,10 +115,8 @@ class PerformanceController
     /**
      * action list
      *
-     * @param array $overwriteDemand
+     * @param array|null $overwriteDemand
      * @return void
-     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
-     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
     public function listAction(array $overwriteDemand = null)
     {
@@ -194,15 +132,9 @@ class PerformanceController
         $this->overwriteDemandObject($demand, $overwriteDemand);
         $performances = $this->performanceRepository->findDemanded($demand);
 
-        $templateVariables = [
-            'performances' => $performances,
-            SI::SETTINGS => $this->settings,
-            SI::OVERWRITE_DEMAND => $overwriteDemand,
-            'data' => $this->contentObject->data
-        ];
-
-        $this->emitSignal(__CLASS__, self::PERFORMANCE_LIST_ACTION, $templateVariables);
-        $this->view->assignMultiple($templateVariables);
+        /** @var PerformanceListActionEvent $event */
+        $event = $this->eventDispatcher->dispatch(new PerformanceListActionEvent($performances, $this->settings, $demand, $this->contentObject->data));
+        $this->view->assignMultiple($event->toArray());
     }
 
     /**
