@@ -35,7 +35,7 @@ class PeriodDataProviderFactory
         $class = PeriodUnknownDataProvider::class;
         $flexFormData = [];
         if (isset($params['row']['pi_flexform'])) {
-            if (!(is_array($params['row']['pi_flexform']))) {
+            if (!(is_array($params['row']['pi_flexform']??''))) {
                 $pluginSettings = GeneralUtility::xml2array($params['row']['pi_flexform']);
             } else {
                 $pluginSettings = $params['row']['pi_flexform'];

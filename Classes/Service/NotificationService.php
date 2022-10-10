@@ -188,7 +188,7 @@ class NotificationService
     protected function getLayoutRootPaths()
     {
         $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        return is_array($extbaseFrameworkConfiguration['view']['layoutRootPaths']) ? $extbaseFrameworkConfiguration['view']['layoutRootPaths'] : [];
+        return $extbaseFrameworkConfiguration['view']['layoutRootPaths'] ?? [];
     }
 
     /**
@@ -199,7 +199,7 @@ class NotificationService
     protected function getTemplateRootPaths()
     {
         $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        return is_array($extbaseFrameworkConfiguration['view']['templateRootPaths']) ? $extbaseFrameworkConfiguration['view']['templateRootPaths'] : [];
+        return $extbaseFrameworkConfiguration['view']['templateRootPaths'] ?? [];
     }
 
     /**
@@ -210,7 +210,7 @@ class NotificationService
     protected function getPartialRootPaths()
     {
         $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        return is_array($extbaseFrameworkConfiguration['view']['partialRootPaths'])? $extbaseFrameworkConfiguration['view']['partialRootPaths'] : [];
+        return $extbaseFrameworkConfiguration['view']['partialRootPaths'] ?? [];
     }
 
     /**

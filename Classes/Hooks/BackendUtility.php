@@ -92,8 +92,8 @@ class BackendUtility
         } else {
             $flexformSelection = $row['pi_flexform'];
         }
-        if (is_array($flexformSelection) && is_array($flexformSelection['data'])) {
-            $selectedView = $flexformSelection['data']['sDEF']['lDEF']['switchableControllerActions']['vDEF'];
+        if (is_array($flexformSelection) && is_array($flexformSelection['data']??'')) {
+            $selectedView = $flexformSelection['data']['sDEF']['lDEF']['switchableControllerActions']['vDEF']??'';
             if (!empty($selectedView)) {
                 $actionParts = GeneralUtility::trimExplode(';', $selectedView, true);
                 $selectedView = $actionParts[0];
@@ -121,7 +121,7 @@ class BackendUtility
 
             }
 
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['t3events']['Hooks/BackendUtility.php']['updateFlexforms'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['t3events']['Hooks/BackendUtility.php']['updateFlexforms']??'')) {
                 $params = array(
                     'selectedView' => $selectedView,
                     'dataStructure' => &$dataStructure,

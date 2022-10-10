@@ -91,7 +91,7 @@ trait BackendViewTrait
         $rendererConfiguration = $this->getPageRendererConfiguration();
 
         if (empty($rendererConfiguration[SettingsInterface::REQUIRE_JS]) ||
-            !\is_array($rendererConfiguration[SettingsInterface::REQUIRE_JS])) {
+            !\is_array($rendererConfiguration[SettingsInterface::REQUIRE_JS]??'')) {
             return;
         }
         $pageRenderer = $view->getModuleTemplate()->getPageRenderer();
@@ -100,7 +100,7 @@ trait BackendViewTrait
         $modulesToLoad = [];
         foreach ($rendererConfiguration[SettingsInterface::REQUIRE_JS] as $identifier => $config) {
             $configuration[SettingsInterface::PATHS][$identifier] = $config[SettingsInterface::PATH];
-            if (\is_array($config[SettingsInterface::MODULES])) {
+            if (!empty($config[SettingsInterface::MODULES]) && \is_array($config[SettingsInterface::MODULES])) {
                 foreach ($config[SettingsInterface::MODULES] as $module) {
                     $modulesToLoad[] = $identifier . SettingsInterface::PATH_SEPARATOR . $module;
                 }

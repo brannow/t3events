@@ -51,14 +51,7 @@ class ItemsProcFunc
      */
     public function user_templateLayout(array &$config)
     {
-        $pageId = null;
-        if (is_numeric($config['row']['pid'])) {
-            $pageId = $config['row']['pid'];
-        }
-        if (is_numeric($config['flexParentDatabaseRow']['pid'])) {
-            $pageId = $config['flexParentDatabaseRow']['pid'];
-        }
-
+        $pageId = (int)($config['row']['pid'] ?? $config['flexParentDatabaseRow']['pid'] ?? 0);
         $templateLayouts = $this->templateLayoutUtility->getLayouts(static::EXTENSION_KEY, $pageId);
 
         foreach ($templateLayouts as $layout) {
