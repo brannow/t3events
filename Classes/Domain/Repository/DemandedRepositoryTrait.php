@@ -173,7 +173,7 @@ trait DemandedRepositoryTrait
      */
     public function combineConstraints(QueryInterface $query, &$constraints, $additionalConstraints, $conjunction = null)
     {
-        if (count($additionalConstraints)) {
+        if ($conjunction !== null && count($additionalConstraints)) {
             switch (strtolower($conjunction)) {
                 case 'or':
                     $constraints[] = $query->logicalOr($additionalConstraints);
@@ -191,6 +191,8 @@ trait DemandedRepositoryTrait
                 default:
                     $constraints[] = $query->logicalAnd($additionalConstraints);
             }
+        } else {
+            $constraints[] = $query->logicalAnd($additionalConstraints);
         }
     }
 

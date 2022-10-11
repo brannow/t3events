@@ -133,7 +133,7 @@ class PerformanceController
         $performances = $this->performanceRepository->findDemanded($demand);
 
         /** @var PerformanceListActionEvent $event */
-        $event = $this->eventDispatcher->dispatch(new PerformanceListActionEvent($performances, $this->settings, $demand, $this->contentObject->data));
+        $event = $this->eventDispatcher->dispatch(new PerformanceListActionEvent($performances, $this->settings, $demand, $this->contentObject->data, (array)$overwriteDemand));
         $this->view->assignMultiple($event->toArray());
     }
 

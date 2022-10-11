@@ -13,19 +13,22 @@ final class PerformanceListActionEvent
     private DemandInterface $demand;
     private array $contentObjectData;
     private array $overwriteData = [];
+    private array $overwriteDemand;
 
     /**
      * @param QueryResultInterface $queryResult
      * @param array $settings
      * @param DemandInterface $demand
      * @param array $contentObjectData
+     * @param array $overwriteDemand
      */
-    public function __construct(QueryResultInterface $queryResult, array $settings, DemandInterface $demand, array $contentObjectData)
+    public function __construct(QueryResultInterface $queryResult, array $settings, DemandInterface $demand, array $contentObjectData, array $overwriteDemand = [])
     {
         $this->queryResult = $queryResult;
         $this->settings = $settings;
         $this->demand = $demand;
         $this->contentObjectData = $contentObjectData;
+        $this->overwriteDemand = $overwriteDemand;
     }
 
     /**
@@ -79,13 +82,22 @@ final class PerformanceListActionEvent
     /**
      * @return array
      */
+    public function getOverwriteDemand(): array
+    {
+        return $this->overwriteDemand;
+    }
+
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->overwriteData + [
             'performances' => $this->queryResult,
             SI::SETTINGS => $this->settings,
             SI::DEMAND => $this->demand,
-            'data' => $this->contentObjectData
+            'data' => $this->contentObjectData,
+            SI::OVERWRITE_DEMAND => $this->overwriteDemand
         ];
     }
 }
