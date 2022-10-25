@@ -17,6 +17,7 @@ namespace DWenzel\T3events\Domain\Factory\Dto;
 use DWenzel\T3events\Domain\Model\Dto\DemandInterface;
 use DWenzel\T3events\Domain\Model\Dto\PerformanceDemand;
 use DWenzel\T3events\Domain\Model\Dto\PeriodAwareDemandInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class PerformanceDemandFactory
@@ -62,7 +63,7 @@ class PerformanceDemandFactory extends AbstractDemandFactory implements DemandFa
     public function createFromSettings(array $settings)
     {
         /** @var PerformanceDemand $demand */
-        $demand = $this->objectManager->get(static::DEMAND_CLASS);
+        $demand = GeneralUtility::makeInstance(static::DEMAND_CLASS);
 
         if (isset($settings['sortBy'])) {
             if ($settings['sortBy'] === 'headline') {

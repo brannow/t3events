@@ -1,6 +1,7 @@
 <?php
 namespace DWenzel\T3events\Controller;
 
+use DWenzel\T3events\Domain\Model\Dto\Search;
 use DWenzel\T3events\Domain\Model\Dto\SearchFactory;
 
 /**
@@ -12,26 +13,18 @@ use DWenzel\T3events\Domain\Model\Dto\SearchFactory;
 trait SearchTrait
 {
     /**
-     * @var \DWenzel\T3events\Domain\Model\Dto\SearchFactory
+     * @var SearchFactory
      */
-    protected $searchFactory;
-
-    /**
-     * @param \DWenzel\T3events\Domain\Model\Dto\SearchFactory $searchFactory
-     */
-    public function injectSearchFactory(SearchFactory $searchFactory)
-    {
-        $this->searchFactory = $searchFactory;
-    }
+    protected SearchFactory $searchFactory;
 
     /**
      * Creates a search object from given settings
      *
      * @param array $searchRequest An array with the search request
      * @param array $settings Settings for search
-     * @return \DWenzel\T3events\Domain\Model\Dto\Search $search
+     * @return Search $search
      */
-    public function createSearchObject($searchRequest, $settings)
+    public function createSearchObject(array $searchRequest, array $settings): Search
     {
         return $this->searchFactory->get($searchRequest, $settings);
     }

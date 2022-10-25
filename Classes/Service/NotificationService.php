@@ -41,7 +41,7 @@ class NotificationService
         $recipient = GeneralUtility::trimExplode(',', $recipient, true);
 
         /** @var $message MailMessage */
-        $message = $this->objectManager->get(MailMessage::class);
+        $message = GeneralUtility::makeInstance(MailMessage::class);
         $message->setTo($recipient)
             ->setFrom($sender)
             ->setSubject($subject);
@@ -89,7 +89,7 @@ class NotificationService
     public function send(Notification $notification)
     {
         /** @var $message MailMessage */
-        $message = $this->objectManager->get(MailMessage::class);
+        $message = GeneralUtility::makeInstance(MailMessage::class);
         $recipients = GeneralUtility::trimExplode(',', $notification->getRecipient(), true);
 
         $message->setTo($recipients)
@@ -130,7 +130,7 @@ class NotificationService
     protected function buildTemplateView($templateName, $format = null, $folderName = null)
     {
         /** @var \TYPO3\CMS\Fluid\View\StandaloneView $emailView */
-        $emailView = $this->objectManager->get(StandaloneView::class);
+        $emailView = GeneralUtility::makeInstance(StandaloneView::class);
         $emailView->setTemplatePathAndFilename(
             $this->getTemplatePathAndFileName($templateName, $folderName)
         );
@@ -222,7 +222,7 @@ class NotificationService
     public function duplicate(Notification $oldNotification)
     {
         /** @var Notification $notification */
-        $notification = $this->objectManager->get(Notification::class);
+        $notification = GeneralUtility::makeInstance(Notification::class);
         $accessibleProperties = ObjectAccess::getSettablePropertyNames($notification);
         foreach ($accessibleProperties as $property) {
             ObjectAccess::setProperty(

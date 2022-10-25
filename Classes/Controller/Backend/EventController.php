@@ -37,7 +37,9 @@ use DWenzel\T3events\Controller\SignalTrait;
 use DWenzel\T3events\Controller\TranslateTrait;
 use DWenzel\T3events\Controller\VenueRepositoryTrait;
 use DWenzel\T3events\Domain\Model\Dto\ButtonDemand;
+use DWenzel\T3events\Service\ModuleDataStorageService;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use DWenzel\T3events\Utility\SettingsUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -71,6 +73,12 @@ class EventController extends AbstractBackendController implements FilterableCon
             ButtonDemand::ICON_SIZE_KEY => Icon::SIZE_SMALL
         ]
     ];
+
+    public function __construct(SettingsUtility $settingsUtility, ModuleDataStorageService $moduleDataStorageService)
+    {
+        $this->moduleDataStorageService = $moduleDataStorageService;
+        $this->settingsUtility = $settingsUtility;
+    }
 
     protected $defaultViewObjectName = BackendTemplateView::class;
 

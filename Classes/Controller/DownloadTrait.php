@@ -3,6 +3,7 @@ namespace DWenzel\T3events\Controller;
 
 use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use DWenzel\T3events\InvalidFileTypeException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Response;
 
@@ -199,7 +200,7 @@ trait DownloadTrait
             'Content-Transfer-Encoding' => 'binary',
         ];
         if (!$this->response instanceof Response) {
-            $this->response = $this->objectManager->get(Response::class);
+            $this->response = GeneralUtility::makeInstance(Response::class);
         }
         foreach ($headers as $header => $data) {
             $this->response->setHeader($header, $data);

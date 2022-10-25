@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use DWenzel\T3events\Domain\Model\Dto\ModuleData;
 use DWenzel\T3events\Service\ModuleDataStorageService;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /**
  * Class ModuleDataTrait
@@ -16,17 +17,17 @@ use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 trait ModuleDataTrait
 {
     /**
-     * @var \DWenzel\T3events\Domain\Model\Dto\ModuleData
+     * @var ModuleData
      */
-    protected $moduleData;
+    protected ModuleData $moduleData;
 
     /**
-     * @var \DWenzel\T3events\Service\ModuleDataStorageService
+     * @var ModuleDataStorageService
      */
-    protected $moduleDataStorageService;
+    protected ModuleDataStorageService $moduleDataStorageService;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+     * @var ObjectManagerInterface
      */
     protected $objectManager;
 
@@ -62,16 +63,6 @@ trait ModuleDataTrait
         $extensionName = null,
         array $arguments = null
     );
-
-    /**
-     * injects the module data storage service
-     *
-     * @param ModuleDataStorageService $service
-     */
-    public function injectModuleDataStorageService(ModuleDataStorageService $service)
-    {
-        $this->moduleDataStorageService = $service;
-    }
 
     public function processRequest(RequestInterface $request): ResponseInterface
     {

@@ -15,11 +15,11 @@ trait TranslateTrait
      *
      * @param string $key
      * @param string $extension
-     * @param array $arguments
+     * @param array|null $arguments
      * @codeCoverageIgnore
      * @return string
      */
-    public function translate($key, $extension = 't3events', $arguments = null)
+    public function translate(string $key, string $extension = 't3events', array $arguments = null)
     {
         if (defined(get_class($this) . '::EXTENSION_KEY')) {
             $extension = static::EXTENSION_KEY;

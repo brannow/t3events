@@ -119,7 +119,7 @@ trait BackendViewTrait
     protected function getUriBuilder()
     {
         if (!$this->uriBuilder instanceof UriBuilder) {
-            $this->uriBuilder = $this->objectManager->get(UriBuilder::class);
+            $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
             $this->uriBuilder->setRequest($this->request);
         }
         return $this->uriBuilder;
@@ -144,7 +144,7 @@ trait BackendViewTrait
             return $this->view->getModuleTemplate()->getDocHeaderComponent()->getButtonBar();
         }
 
-        return $this->objectManager->get(ButtonBar::class);
+        return GeneralUtility::makeInstance(ButtonBar::class);
     }
 
     /**

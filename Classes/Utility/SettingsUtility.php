@@ -156,7 +156,7 @@ class SettingsUtility implements SingletonInterface
      */
     public function getFileStorage(DomainObjectInterface $object, $config)
     {
-        $fileStorage = $this->objectManager->get(
+        $fileStorage = GeneralUtility::makeInstance(
             ObjectStorage::class
         );
         $valueFromSettings = $this->getValue($object, $config);

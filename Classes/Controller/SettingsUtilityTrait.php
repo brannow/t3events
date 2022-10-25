@@ -12,9 +12,9 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 trait SettingsUtilityTrait
 {
     /**
-     * @var \DWenzel\T3events\Utility\SettingsUtility
+     * @var SettingsUtility
      */
-    protected $settingsUtility;
+    protected SettingsUtility $settingsUtility;
 
     /**
      * @var array
@@ -25,16 +25,6 @@ trait SettingsUtilityTrait
      * @var string
      */
     protected $actionMethodName = 'indexAction';
-
-    /**
-     * injects the settings utility
-     *
-     * @param \DWenzel\T3events\Utility\SettingsUtility $settingsUtility
-     */
-    public function injectSettingsUtility(SettingsUtility $settingsUtility)
-    {
-        $this->settingsUtility = $settingsUtility;
-    }
 
     /**
      * Merges TypoScript settings for action an controller into one array

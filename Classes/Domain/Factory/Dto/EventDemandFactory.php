@@ -24,6 +24,8 @@ use DWenzel\T3events\Domain\Model\Dto\PeriodAwareDemandInterface;
  ***************************************************************/
 
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class EventDemandFactory
  * Creates EventDemand objects
@@ -75,7 +77,7 @@ class EventDemandFactory extends AbstractDemandFactory implements DemandFactoryI
     public function createFromSettings(array $settings)
     {
         /** @var EventDemand $demand */
-        $demand = $this->objectManager->get(static::DEMAND_CLASS);
+        $demand = GeneralUtility::makeInstance(static::DEMAND_CLASS);
 
         if ($demand instanceof PeriodAwareDemandInterface) {
             $this->setPeriodConstraints($demand, $settings);

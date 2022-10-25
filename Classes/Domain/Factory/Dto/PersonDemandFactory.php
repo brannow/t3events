@@ -17,6 +17,7 @@ namespace DWenzel\T3events\Domain\Factory\Dto;
 use DWenzel\T3events\Domain\Model\Dto\DemandInterface;
 use DWenzel\T3events\Domain\Model\Dto\PeriodAwareDemandInterface;
 use DWenzel\T3events\Domain\Model\Dto\PersonDemand;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class PersonDemandFactory
@@ -61,7 +62,7 @@ class PersonDemandFactory extends AbstractDemandFactory implements DemandFactory
     public function createFromSettings(array $settings)
     {
         /** @var PersonDemand $demand */
-        $demand = $this->objectManager->get(static::DEMAND_CLASS);
+        $demand = GeneralUtility::makeInstance(static::DEMAND_CLASS);
 
         if ($demand instanceof PeriodAwareDemandInterface) {
             $this->setPeriodConstraints($demand, $settings);

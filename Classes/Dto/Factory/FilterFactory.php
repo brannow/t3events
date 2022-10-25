@@ -6,6 +6,7 @@ use DWenzel\T3events\Dto\FilterInterface;
 use DWenzel\T3events\Dto\FilterResolver;
 use DWenzel\T3events\Dto\FilterResolverInterface;
 use DWenzel\T3events\Object\ObjectManagerTrait;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -55,7 +56,7 @@ class FilterFactory
         $filterClass = $this->getFilterResolver()->resolve($key);
 
         /** @var FilterInterface $filter */
-        $filter = $this->objectManager->get($filterClass);
+        $filter = GeneralUtility::makeInstance($filterClass);
         $filter->configure($configuration);
 
         return $filter;

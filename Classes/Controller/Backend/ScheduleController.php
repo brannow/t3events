@@ -5,7 +5,15 @@ namespace DWenzel\T3events\Controller\Backend;
 use DWenzel\T3events\Controller\ModuleDataTrait;
 use DWenzel\T3events\Controller\PerformanceController;
 use DWenzel\T3events\Controller\SettingsUtilityTrait;
+use DWenzel\T3events\Domain\Model\Dto\SearchFactory;
+use DWenzel\T3events\Domain\Repository\CategoryRepository;
+use DWenzel\T3events\Domain\Repository\EventTypeRepository;
+use DWenzel\T3events\Domain\Repository\GenreRepository;
+use DWenzel\T3events\Domain\Repository\PerformanceRepository;
+use DWenzel\T3events\Domain\Repository\VenueRepository;
+use DWenzel\T3events\Service\ModuleDataStorageService;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use DWenzel\T3events\Utility\SettingsUtility;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException;
@@ -17,6 +25,12 @@ use TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException;
 class ScheduleController extends PerformanceController
 {
     use ModuleDataTrait, FormTrait, SettingsUtilityTrait;
+
+    public function __construct(ModuleDataStorageService $moduleDataStorageService, CategoryRepository $categoryRepository, PerformanceRepository $performanceRepository, GenreRepository $genreRepository, VenueRepository $venueRepository, EventTypeRepository $eventTypeRepository, SearchFactory $searchFactory, SettingsUtility $settingsUtility)
+    {
+        $this->moduleDataStorageService = $moduleDataStorageService;
+        parent::__construct($categoryRepository, $performanceRepository, $genreRepository, $venueRepository, $eventTypeRepository, $searchFactory, $settingsUtility);
+    }
 
     /**
      * @param RequestInterface $request

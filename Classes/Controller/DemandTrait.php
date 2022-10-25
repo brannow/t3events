@@ -11,6 +11,7 @@ use DWenzel\T3events\Domain\Model\Dto\SearchAwareDemandInterface;
 use DWenzel\T3events\Domain\Model\Dto\VenueAwareDemandInterface;
 use DWenzel\T3events\Domain\Repository\PeriodConstraintRepositoryInterface;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use DWenzel\T3events\Utility\SettingsUtility;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
@@ -20,11 +21,6 @@ use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
  */
 trait DemandTrait
 {
-    /**
-     * @var \DWenzel\T3events\Utility\SettingsUtility
-     */
-    protected $settingsUtility;
-
     /**
      * Settings
      *
@@ -39,7 +35,7 @@ trait DemandTrait
      * @param array $settings Settings for search
      * @return \DWenzel\T3events\Domain\Model\Dto\Search $search
      */
-    abstract public function createSearchObject($searchRequest, $settings);
+    abstract public function createSearchObject(array $searchRequest, array $settings);
 
     /**
      * @param DemandInterface $demand

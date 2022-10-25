@@ -2,6 +2,7 @@
 namespace DWenzel\T3events\Domain\Model\Dto;
 
 use DWenzel\T3events\Object\ObjectManagerTrait;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 
 /***************************************************************
@@ -35,7 +36,7 @@ class SearchFactory
     public function get($searchRequest, $settings)
     {
         /** @var Search $searchObject */
-        $searchObject = $this->objectManager->get(Search::class);
+        $searchObject = GeneralUtility::makeInstance(Search::class);
 
         if (isset($searchRequest['subject']) && isset($settings['fields'])) {
             $searchObject->setFields($settings['fields']);

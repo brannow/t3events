@@ -15,8 +15,16 @@ namespace DWenzel\T3events\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3events\Domain\Factory\Dto\EventDemandFactory;
+use DWenzel\T3events\Domain\Model\Dto\SearchFactory;
 use DWenzel\T3events\Domain\Model\Event;
+use DWenzel\T3events\Domain\Repository\EventRepository;
+use DWenzel\T3events\Domain\Repository\EventTypeRepository;
+use DWenzel\T3events\Domain\Repository\GenreRepository;
+use DWenzel\T3events\Domain\Repository\VenueRepository;
+use DWenzel\T3events\Session\SessionInterface;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use DWenzel\T3events\Utility\SettingsUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -28,16 +36,42 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class EventController extends ActionController
 {
-    use DemandTrait, EventDemandFactoryTrait,
-        EventRepositoryTrait, EntityNotFoundHandlerTrait,
-        EventTypeRepositoryTrait, FilterableControllerTrait,
-        GenreRepositoryTrait, SearchTrait, SessionTrait,
-        SettingsUtilityTrait, VenueRepositoryTrait,
-        TranslateTrait;
+    use DemandTrait, EntityNotFoundHandlerTrait, FilterableControllerTrait,
+        SettingsUtilityTrait, SearchTrait, TranslateTrait;
 
     const EVENT_QUICK_MENU_ACTION = 'quickMenuAction';
     const EVENT_LIST_ACTION = 'listAction';
     const EVENT_SHOW_ACTION = 'showAction';
+
+    protected EventDemandFactory $eventDemandFactory;
+    protected EventRepository $eventRepository;
+    protected EventTypeRepository $eventTypeRepository;
+    protected GenreRepository $genreRepository;
+    protected SessionInterface $session;
+    protected VenueRepository $venueRepository;
+
+    /**
+     * @param EventDemandFactory $eventDemandFactory
+     * @param EventRepository $eventRepository
+     * @param EventTypeRepository $eventTypeRepository
+     * @param GenreRepository $genreRepository
+     * @param SearchFactory $searchFactory
+     * @param SessionInterface $session
+     * @param SettingsUtility $settingsUtility
+     * @param VenueRepository $venueRepository
+     */
+    public function __construct(EventDemandFactory $eventDemandFactory, EventRepository $eventRepository, EventTypeRepository $eventTypeRepository, GenreRepository $genreRepository, SearchFactory $searchFactory, SessionInterface $session, SettingsUtility $settingsUtility, VenueRepository $venueRepository)
+    {
+        $this->eventDemandFactory = $eventDemandFactory;
+        $this->eventRepository = $eventRepository;
+        $this->eventTypeRepository = $eventTypeRepository;
+        $this->genreRepository = $genreRepository;
+        $this->searchFactory = $searchFactory;
+        $this->session = $session;
+        $this->settingsUtility = $settingsUtility;
+        $this->venueRepository = $venueRepository;
+    }
+
 
     /**
      * initializes all actions

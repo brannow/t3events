@@ -15,15 +15,21 @@ namespace DWenzel\T3events\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DWenzel\T3events\Domain\Factory\Dto\PerformanceDemandFactory;
 use DWenzel\T3events\Domain\Model\Dto\PerformanceDemand;
+use DWenzel\T3events\Domain\Model\Dto\SearchFactory;
 use DWenzel\T3events\Domain\Model\Performance;
+use DWenzel\T3events\Domain\Repository\CategoryRepository;
 use DWenzel\T3events\Domain\Repository\EventTypeRepository;
 use DWenzel\T3events\Domain\Repository\GenreRepository;
 use DWenzel\T3events\Domain\Repository\PerformanceRepository;
 use DWenzel\T3events\Domain\Repository\VenueRepository;
 use DWenzel\T3events\Events\PerformanceListActionEvent;
+use DWenzel\T3events\Utility\SettingsUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use DWenzel\T3events\Utility\SettingsInterface as SI;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 
 /**
@@ -35,9 +41,9 @@ class PerformanceController
     extends ActionController
     implements FilterableControllerInterface
 {
-    use CategoryRepositoryTrait,
+    use
         DemandTrait, EntityNotFoundHandlerTrait, FilterableControllerTrait,
-        PerformanceDemandFactoryTrait, SearchTrait, SessionTrait,
+        SearchTrait, SessionTrait,
         SettingsUtilityTrait, TranslateTrait;
 
     const PERFORMANCE_LIST_ACTION = 'listAction';
@@ -45,50 +51,29 @@ class PerformanceController
     const PERFORMANCE_SHOW_ACTION = 'showAction';
     const SESSION_NAME_SPACE = 'performanceController';
 
-    /**
-     * performanceRepository
-     *
-     * @var \DWenzel\T3events\Domain\Repository\PerformanceRepository
-     */
-    protected $performanceRepository;
+    protected PerformanceRepository $performanceRepository;
+    protected CategoryRepository $categoryRepository;
+    protected GenreRepository $genreRepository;
+    protected VenueRepository $venueRepository;
+    protected EventTypeRepository $eventTypeRepository;
+    protected ?ContentObjectRenderer $contentObject = null;
+    protected PerformanceDemandFactory $performanceDemandFactory;
 
-    /**
-     * genreRepository
-     *
-     * @var \DWenzel\T3events\Domain\Repository\GenreRepository
-     */
-    protected $genreRepository;
 
-    /**
-     * venueRepository
-     *
-     * @var \DWenzel\T3events\Domain\Repository\VenueRepository
-     */
-    protected $venueRepository;
-
-    /**
-     * eventTypeRepository
-     *
-     * @var \DWenzel\T3events\Domain\Repository\EventTypeRepository
-     */
-    protected $eventTypeRepository;
-
-    /**
-     * TYPO3 Content Object
-     *
-     * @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
-     */
-    protected $contentObject;
 
     /**
      * Constructor
      */
-    public function __construct(PerformanceRepository $performanceRepository, GenreRepository $genreRepository, VenueRepository $venueRepository, EventTypeRepository $eventTypeRepository)
+    public function __construct(CategoryRepository $categoryRepository, PerformanceRepository $performanceRepository, GenreRepository $genreRepository, VenueRepository $venueRepository, EventTypeRepository $eventTypeRepository, SearchFactory $searchFactory, SettingsUtility $settingsUtility)
     {
+        $this->performanceDemandFactory = GeneralUtility::makeInstance(PerformanceDemandFactory::class);
+        $this->categoryRepository = $categoryRepository;
         $this->performanceRepository = $performanceRepository;
         $this->genreRepository = $genreRepository;
         $this->venueRepository = $venueRepository;
         $this->eventTypeRepository = $eventTypeRepository;
+        $this->settingsUtility = $settingsUtility;
+        $this->searchFactory = $searchFactory;
         $this->namespace = get_class($this);
     }
 

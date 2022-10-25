@@ -54,7 +54,7 @@ class PerformanceRepository extends Repository implements
     {
         $emConfiguration = EmConfigurationUtility::getSettings();
         if (!(bool)$emConfiguration->isRespectPerformanceStoragePage()) {
-            $this->defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+            $this->defaultQuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
             $this->defaultQuerySettings->setRespectStoragePage(false);
         }
     }
